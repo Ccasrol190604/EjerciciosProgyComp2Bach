@@ -14,7 +14,7 @@ public class Ejercicio01_Matriz5x5 {
 		muestroMatriz(matriz);	
 		
 		System.out.println("\nMatriz positiva: " +esMatrizPositiva(matriz));
-	}
+	}  
 	
 	/**
 	 * 
