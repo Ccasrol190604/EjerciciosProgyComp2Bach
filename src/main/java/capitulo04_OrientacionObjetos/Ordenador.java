@@ -55,7 +55,7 @@ public class Ordenador {
 	}
 
 	public void setEsPortatil(String string) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 }
