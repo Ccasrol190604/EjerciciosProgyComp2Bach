@@ -3,8 +3,8 @@ package capitulo04_OrientacionObjetos.Ejercicio03;
 public class Mineral {
 	
 
-		protected float Dureza();
-		protected  String Color();
+		protected float Dureza;
+		protected  String Color;
 		
 		public Mineral() {
 		super();
@@ -33,7 +33,7 @@ public class Mineral {
 		}
 		@Override
 		public String toString() {
-			return "Mineral [Dureza=" + Dureza() + ", Color=" + Color() + "]";
+			return "Mineral [Dureza=" + Dureza + ", Color=" + Color + "]";
 		}
 		
 		
