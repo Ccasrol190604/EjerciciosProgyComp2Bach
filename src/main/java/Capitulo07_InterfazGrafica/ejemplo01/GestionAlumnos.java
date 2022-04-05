@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Font;
 import java.awt.Insets;
@@ -19,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
 
 public class GestionAlumnos {
 
@@ -49,6 +52,7 @@ public class GestionAlumnos {
 	 */
 	public GestionAlumnos() {
 		initialize();
+		mostrarPrimerAlumno();
 	}
 
 	/**
@@ -83,6 +87,7 @@ public class GestionAlumnos {
 		frame.getContentPane().add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
 		jtfid = new JTextField();
+		jtfid.setEnabled(false);
 		GridBagConstraints gbc_jtfid = new GridBagConstraints();
 		gbc_jtfid.insets = new Insets(0, 0, 5, 0);
 		gbc_jtfid.fill = GridBagConstraints.HORIZONTAL;
@@ -170,16 +175,39 @@ public class GestionAlumnos {
 		});
 		panel.add(btnNewButton_1);
 		
-		JButton btnNewButton_2 = new JButton(">");
-		panel.add(btnNewButton_2);
-		
 		JButton btnNewButton_3 = new JButton(">>");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mostrarUltimoAlumno();
 			}
 		});
+		
+		JButton btnNewButton_4 = new JButton(">");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mostrarSiguienteAlumno();
+			}
+		});
+		panel.add(btnNewButton_4);
 		panel.add(btnNewButton_3);
+		
+		JButton btnNewButton_2 = new JButton("");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				guardar();
+			}
+		});
+		
+		JButton btnNewButton_5 = new JButton("");
+		btnNewButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nuevo();
+			}
+		});
+		btnNewButton_5.setIcon(new ImageIcon(GestionAlumnos.class.getResource("/tutorialJava/capitulo7_InterfazGrafica/res/nuevo.png")));
+		panel.add(btnNewButton_5);
+		btnNewButton_2.setIcon(new ImageIcon(GestionAlumnos.class.getResource("/tutorialJava/capitulo7_InterfazGrafica/res/guardar.png")));
+		panel.add(btnNewButton_2);
 	}
 	
 	/**
@@ -262,7 +290,7 @@ public class GestionAlumnos {
 		   
 			Statement s = (Statement) conexion.createStatement(); 
 		
-			ResultSet rs = s.executeQuery ("select * from alumnos.alumno order by id limit 1");
+			ResultSet rs = s.executeQuery ("select * from alumnos.alumno where id < " + jtfid.getText() + " order by id desc limit 1");
 		   
 			if (rs.next() == true) { 
 				jtfid.setText(rs.getString("id"));
@@ -283,5 +311,83 @@ public class GestionAlumnos {
 			ex.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	private void mostrarSiguienteAlumno() {
+		try {
+		
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		   
+			Connection conexion = (Connection) DriverManager.getConnection ("jdbc:mysql://localhost/alumnos?serverTimezone=UTC","root", "Abcdefgh.1");
+		   
+			Statement s = (Statement) conexion.createStatement(); 
+		
+			ResultSet rs = s.executeQuery ("select * from alumnos.alumno where id > " + jtfid.getText() + " order by id limit 1");
+		   
+			if (rs.next() == true) { 
+				jtfid.setText(rs.getString("id"));
+				jtfnombre.setText(rs.getString("Nombre"));
+				jtfapellidos.setText(rs.getString("Apellidos"));
+				jtfNIF.setText(rs.getString("NIF"));
+			}
+			rs.close();
+			s.close();
+			conexion.close();
+		}
+		catch (ClassNotFoundException ex) {
+			System.out.println("Imposible acceder al driver Mysql");
+			ex.printStackTrace();
+		}
+		catch (SQLException ex) {
+			System.out.println("Error en la ejecución SQL: " + ex.getMessage());
+			ex.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void guardar() {
+		try {
+		
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		   
+			Connection conexion = (Connection) DriverManager.getConnection ("jdbc:mysql://localhost/alumnos?serverTimezone=UTC","root", "Abcdefgh.1");
+		   
+			Statement s = (Statement) conexion.createStatement(); 
+		
+			int registrosmodificados = s.executeUpdate ("update alumnos.alumno set nombre = '" + jtfnombre.getText() +  
+					"Apellidos = '" + jtfapellidos.getText() + " NIF = '" + jtfNIF.getText() + "where id = " + jtfid.getText());
+		   
+			if (registrosmodificados == 1) {
+				JOptionPane.showMessageDialog(null, "Guardado correctamente");
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Error al guardar");
+			}
+				
+			s.close();
+			conexion.close();}
 
+		catch (ClassNotFoundException ex) {
+			System.out.println("Imposible acceder al driver Mysql");
+			ex.printStackTrace();
+		}
+		catch (SQLException ex) {
+			System.out.println("Error en la ejecución SQL: " + ex.getMessage());
+			ex.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void nuevo() {
+		this.jtfid.setText("0");
+		this.jtfnombre.setText("");
+		this.jtfapellidos.setText("");
+		this.jtfNIF.setText("");
+	}
 }
