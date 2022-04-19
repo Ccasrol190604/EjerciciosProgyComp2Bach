@@ -379,7 +379,7 @@ public class GestionAlumnos {
 	 * 
 	 */	
 	private void insertar() {
-try {
+		try {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		   
@@ -482,8 +482,11 @@ try {
 		}
 	}
 	
+	/**
+	 * 
+	 */	
 	private void eliminar() {
-try {
+		try {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		   
@@ -494,8 +497,10 @@ try {
 			int registrosmodificados = s.executeUpdate ("delete from alumnos.alumno " + "where id " + jtfid.getText());
 		   
 			if (registrosmodificados == 1) {
-				JOptionPane.showMessageDialog(null, "Eliminado correctamente" + mostrarPrimerAlumno());
+				JOptionPane.showMessageDialog(null, "Eliminado correctamente");
+				mostrarPrimerAlumno();
 			}
+			
 			else {
 				JOptionPane.showMessageDialog(null, "Error al eliminar");
 			}
