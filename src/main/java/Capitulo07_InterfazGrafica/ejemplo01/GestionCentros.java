@@ -498,8 +498,8 @@ public class GestionCentros {
 		
 			int registrosmodificados = s.executeUpdate ("update centro_educativo.centro set tipo = '" + jtftipo.getText() + "', " + 
 					"denominacion = '" + jtfdenominacion.getText() + "', direccion = '" + jtfdireccion.getText() + 
-					"', poblacion = '" + jtfpoblacion.getText() + "', provincia = '" + jtfprovincia.getText() +
-					" ', where id = '" + jtfid.getText());
+					"', poblacion = '" + jtfpoblacion.getText() + "', provincia = '" + jtfprovincia.getText() + "' " +
+					" where id = " + jtfid.getText());
 		   
 			if (registrosmodificados == 1) {
 				JOptionPane.showMessageDialog(null, "Guardado correctamente");
