@@ -9,8 +9,8 @@ public class MiCanvas extends Canvas{
 	public void paint(Graphics g) {
 		super.paint(g);
 	}
-	g.setColor(Color.)
-	g.fill
+//	g.setColor(Color.)
+//	g.fill
 	
 	
 

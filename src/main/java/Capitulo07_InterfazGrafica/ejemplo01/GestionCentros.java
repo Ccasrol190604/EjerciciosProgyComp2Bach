@@ -533,7 +533,7 @@ public class GestionCentros {
 		   
 			Statement s = (Statement) conexion.createStatement(); 
 		
-			int registrosmodificados = s.executeUpdate ("delete from centro_educativo.centro " + "where id " + jtfid.getText());
+			int registrosmodificados = s.executeUpdate ("delete from centro_educativo.centro " + "where id = " + jtfid.getText());
 		   
 			if (registrosmodificados == 1) {
 				JOptionPane.showMessageDialog(null, "Eliminado correctamente");
