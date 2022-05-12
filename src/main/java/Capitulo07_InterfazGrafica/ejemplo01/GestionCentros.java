@@ -56,6 +56,7 @@ public class GestionCentros {
 	 */
 	public GestionCentros() {
 		initialize();
+		mostrarPrimerCentro();
 	}
 
 	/**
