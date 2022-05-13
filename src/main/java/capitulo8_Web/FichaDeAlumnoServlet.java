@@ -14,25 +14,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class ListadoAlumnosServlet
+ * Servlet implementation class FichaDeAlumnoServlet
  */
-@WebServlet("/ListadoAlumnosServlet")
-public class ListadoAlumnosServlet extends HttpServlet {
+@WebServlet("/FichaDeAlumnoServlet")
+public class FichaDeAlumnoServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	
 	String respuesta = " "; 
-	
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public ListadoAlumnosServlet() {
+    public FichaDeAlumnoServlet() {
+        super();
+      
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		mostrarTodosAlumnos();
-		response.getWriter().append(this.respuesta);
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(request.getParameter("id"));
 		this.respuesta= "<!DOCTYPE html> "
 				+ "<html>"
 				+ "<head>"
@@ -41,7 +43,7 @@ public class ListadoAlumnosServlet extends HttpServlet {
 				+ "</head>"
 				+ "<body> ";
 		
-		mostrarTodosAlumnos();
+		mostrarUnAlumno (Integer.parseInt(request.getParameter("id")) );
 		
 		this.respuesta += "</body>"
 				+ "<html>";
@@ -50,11 +52,10 @@ public class ListadoAlumnosServlet extends HttpServlet {
 		
 	}
 	
-	
 	/**
 	 * 
 	 */
-	private void mostrarTodosAlumnos() {
+	private void mostrarUnAlumno(int id) {
 		try {
 		
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -63,41 +64,10 @@ public class ListadoAlumnosServlet extends HttpServlet {
 		   
 			Statement s = (Statement) conexion.createStatement(); 
 		
-			ResultSet rs = s.executeQuery ("select * from alumnos.alumno");
-		   
-			while (rs.next() == true) { 
-				this.respuesta += rs.getString("nombre") + "<a href= 'ListadoAlumnosServlet?id=1'>clic " +  "</br>";
-			}
-			rs.close();
-			s.close();
-			conexion.close();
-		}
-		catch (ClassNotFoundException ex) {
-			System.out.println("Imposible acceder al driver Mysql");
-			ex.printStackTrace();
-		}
-		catch (SQLException ex) {
-			System.out.println("Error en la ejecución SQL: " + ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	private void mostrarPrimerAlumno() {
-		try {
-		
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		   
-			Connection conexion = (Connection) DriverManager.getConnection ("jdbc:mysql://localhost/alumnos?serverTimezone=UTC","root", "Abcdefgh.1");
-		   
-			Statement s = (Statement) conexion.createStatement(); 
-		
-			ResultSet rs = s.executeQuery ("select * from alumnos.alumno order by id limit 1");
+			ResultSet rs = s.executeQuery ("select * from alumnos.alumno where id = " + id);
 		   
 			if (rs.next() == true) { 
-				this.respuesta += rs.getString("nombre");
+				this.respuesta += rs.getString("nombre") + "<a href= 'FichaAlumnoServlet?id=1'>clic " +  "</br>";
 			}
 			rs.close();
 			s.close();
