@@ -67,7 +67,10 @@ public class FichaDeAlumnoServlet extends HttpServlet {
 			ResultSet rs = s.executeQuery ("select * from alumnos.alumno where id = " + id);
 		   
 			if (rs.next() == true) { 
-				this.respuesta += rs.getString("nombre") + "<a href= 'FichaAlumnoServlet?id=1'>clic " +  "</br>";
+				this.respuesta += "<h1>Ficha de alumno</h1>" 
+									+ "Nombre: " + rs.getString("nombre") + "</br>" 
+									+ "Apellidos: " + rs.getString("apellidos") + "</br>"
+									+ "NIF: " + rs.getString("nif") + "</br>" ;
 			}
 			rs.close();
 			s.close();

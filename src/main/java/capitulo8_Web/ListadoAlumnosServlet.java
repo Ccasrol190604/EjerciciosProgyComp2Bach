@@ -32,18 +32,19 @@ public class ListadoAlumnosServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		mostrarTodosAlumnos();
-		response.getWriter().append(this.respuesta);
 		this.respuesta= "<!DOCTYPE html> "
 				+ "<html>"
-				+ "<head>"
+				+ "<head>"  
 				+ "<meta charset=\"ISO-8859-1\"> "
 				+ "<title>Mi primer servlet</title>"
 				+ "</head>"
-				+ "<body> ";
+				+ "<body> "
+				+ "<h1>Listado del alumnado</h1>"
+				+ "<table width= '100%' border='1'>" ;
 		
 		mostrarTodosAlumnos();
 		
-		this.respuesta += "</body>"
+		this.respuesta += "</table></body>"
 				+ "<html>";
 		
 		response.getWriter().append(this.respuesta);
@@ -66,7 +67,9 @@ public class ListadoAlumnosServlet extends HttpServlet {
 			ResultSet rs = s.executeQuery ("select * from alumnos.alumno");
 		   
 			while (rs.next() == true) { 
-				this.respuesta += rs.getString("nombre") + "<a href= 'ListadoAlumnosServlet?id=1'>clic " +  "</br>";
+				this.respuesta += "<tr>" + "<td>" + "<a href= 'FichaDeAlumnoServlet?id=" + rs.getInt("id") + "'>" +  rs.getString("nombre") + "</a></td>" 
+										 + "<td>" + rs.getString("apellidos")	+ "</td>" 
+										 + "<td>" + rs.getInt("id")	+ "</td>" + "</tr>";
 			}
 			rs.close();
 			s.close();
