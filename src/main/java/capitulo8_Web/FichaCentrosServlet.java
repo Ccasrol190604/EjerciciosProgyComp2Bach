@@ -14,19 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class FichaDeAlumnoServlet
+ * Servlet implementation class FichaCentrosServlet
  */
-@WebServlet("/FichaDeAlumnoServlet")
-public class FichaDeAlumnoServlet extends HttpServlet {
+@WebServlet("/FichaCentrosServlet")
+public class FichaCentrosServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	String respuesta = " "; 
+	String respuesta = " ";
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FichaDeAlumnoServlet() {
-        super();
+    public FichaCentrosServlet() {
+    	super();
     }
 
 	/**
@@ -38,11 +38,11 @@ public class FichaDeAlumnoServlet extends HttpServlet {
 				+ "<html>"
 				+ "<head>"
 				+ "<meta charset=\"ISO-8859-1\"> "
-				+ "<title>Mi primer servlet</title>"
+				+ "<title>Mi segundo servlet</title>"
 				+ "</head>"
 				+ "<body> ";
 		
-		mostrarUnAlumno (Integer.parseInt(request.getParameter("id")) );
+		mostrarUnCentro (Integer.parseInt(request.getParameter("id")) );
 		
 		this.respuesta += "</body>"
 				+ "<html>";
@@ -50,26 +50,29 @@ public class FichaDeAlumnoServlet extends HttpServlet {
 		response.getWriter().append(this.respuesta);
 		
 	}
-	
+
 	/**
 	 * 
 	 */
-	private void mostrarUnAlumno(int id) {
+	private void mostrarUnCentro(int id) {
 		try {
 		
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		   
-			Connection conexion = (Connection) DriverManager.getConnection ("jdbc:mysql://localhost/alumnos?serverTimezone=UTC","root", "Abcdefgh.1");
+			Connection conexion = (Connection) DriverManager.getConnection ("jdbc:mysql://localhost/centro_educativo?serverTimezone=UTC","root", "Abcdefgh.1");
 		   
 			Statement s = (Statement) conexion.createStatement(); 
 		
-			ResultSet rs = s.executeQuery ("select * from alumnos.alumno where id = " + id);
+			ResultSet rs = s.executeQuery ("select * from centro_educativo.centro where id = " + id);
 		   
 			if (rs.next() == true) { 
-				this.respuesta += "<h1>Ficha de alumno</h1>" 
-									+ "Nombre: " + rs.getString("nombre") + "</br>" 
-									+ "Apellidos: " + rs.getString("apellidos") + "</br>"
-									+ "NIF: " + rs.getString("nif") + "</br>" ;
+				this.respuesta += "<h1>Ficha del centro</h1>" 
+									+ "Id: " + rs.getString("id") + "</br>" 
+									+ "Tipo: " + rs.getString("tipo") + "</br>"
+									+ "Denominación: " + rs.getString("denominacion") + "</br>" 
+									+ "Dirección: " + rs.getString("direccion") + "</br>" 
+									+ "Población: " + rs.getString("poblacion") + "</br>"
+									+ "Provincia: " + rs.getString("provincia") + "</br>";
 			}
 			rs.close();
 			s.close();
@@ -84,5 +87,4 @@ public class FichaDeAlumnoServlet extends HttpServlet {
 			ex.printStackTrace();
 		}
 	}
-
 }
