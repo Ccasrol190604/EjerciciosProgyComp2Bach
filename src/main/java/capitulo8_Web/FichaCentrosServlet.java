@@ -33,19 +33,34 @@ public class FichaCentrosServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(request.getParameter("id"));
+		int id = Integer.parseInt(request.getParameter("id"));
+		String tipo = request.getParameter("tipo");
+		String denominacion = request.getParameter("denominacion");
+		String direccion = request.getParameter("direccion");
+		String poblacion = request.getParameter("poblacion");
+		String provincia = request.getParameter("provincia");
+		
+		
+		
 		this.respuesta= "<!DOCTYPE html> "
 				+ "<html>"
 				+ "<head>"
+				+ "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />"
 				+ "<meta charset=\"ISO-8859-1\"> "
 				+ "<title>Mi segundo servlet</title>"
 				+ "</head>"
-				+ "<body> ";
+				+ "<body> "
+				+ "<h1>Ficha del centro/a</h1>"
+				+ "<form method='GET' action='FichaCentrosServlet'>";
 		
-		mostrarUnCentro (Integer.parseInt(request.getParameter("id")) );
+		if (tipo != null) {
+			modificar(id, tipo, denominacion, direccion, poblacion, provincia);
+		}
 		
-		this.respuesta += "</body>"
-				+ "<html>";
+		mostrarUnCentro (id);
+		
+		this.respuesta += "<br><button type='submit'>Enviar formulario</button></form></body>"
+							+ "</html>";
 		
 		response.getWriter().append(this.respuesta);
 		
@@ -66,15 +81,56 @@ public class FichaCentrosServlet extends HttpServlet {
 			ResultSet rs = s.executeQuery ("select * from centro_educativo.centro where id = " + id);
 		   
 			if (rs.next() == true) { 
-				this.respuesta += "<h1>Ficha del centro</h1>" 
-									+ "Id: " + rs.getString("id") + "</br>" 
-									+ "Tipo: " + rs.getString("tipo") + "</br>"
-									+ "Denominación: " + rs.getString("denominacion") + "</br>" 
-									+ "Dirección: " + rs.getString("direccion") + "</br>" 
-									+ "Población: " + rs.getString("poblacion") + "</br>"
-									+ "Provincia: " + rs.getString("provincia") + "</br>";
+				this.respuesta += "<h1>Ficha del centro</h1>" +
+						"<input type='hidden' name='id' value='" + id + "'>" + 
+						"Tipo: <input type='text' name='tipo' value='" + rs.getString("tipo") + "'><br/>" +
+						"Denominacion: <input type='text' name='denominacion' value='" + rs.getString("denominacion") + "'><br/>" + 
+						"Direccion: <input type='text' name='direccion' value='" + rs.getString("direccion") + "'>" +
+						"Poblacion: <input type='text' name='poblacion' value='" + rs.getString("poblacion") + "'>" +
+						"Provincia: <input type='text' name='provincia' value='" + rs.getString("provincia") + "'>";
 			}
 			rs.close();
+			s.close();
+			conexion.close();
+		}
+		catch (ClassNotFoundException ex) {
+			System.out.println("Imposible acceder al driver Mysql");
+			ex.printStackTrace();
+		}
+		catch (SQLException ex) {
+			System.out.println("Error en la ejecución SQL: " + ex.getMessage());
+			ex.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void modificar (int id, String tipo, String denominacion, String direccion, String poblacion, String provincia) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conexion = (Connection) DriverManager.getConnection ("jdbc:mysql://localhost/centro_educativo?serverTimezone=UTC","root", "Abcdefgh.1");
+
+			Statement s = (Statement) conexion.createStatement(); 
+			
+			String sql = "update centro_educativo.centro set tipo = '" + tipo + "', " + 
+					"denominacion = '" + denominacion + "', " +
+					"direccion = '" + direccion + "' , " +
+					"poblacion = '" + poblacion + "' , " + 
+					"provincia = '" + provincia + "' " +
+					"where id = " + id;
+			
+			System.out.println(sql);
+			int registrosModificados = s.executeUpdate (sql);
+		   
+			if (registrosModificados == 1) {
+//				JOptionPane.showMessageDialog(null, "Guardado correctamente");
+			}
+			else {
+//				JOptionPane.showMessageDialog(null, "Error al guardar");
+			}
+			
+			// Cierre de los elementos
 			s.close();
 			conexion.close();
 		}
